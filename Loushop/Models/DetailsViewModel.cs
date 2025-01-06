@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Loushop.Models
+{
+    public class DetailsViewModel
+    {
+        public Product product { get; set; }
+        public List<Category> Categories { get; set; }
+    }
+}

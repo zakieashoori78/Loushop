@@ -1,0 +1,35 @@
+﻿@model DetailsViewModel
+@{
+    ViewData["Title"] = "کالا" + Model.product.Name;
+}
+
+<div>
+    <h1 class="display-5">@Model.product.Name</h1>
+    <hr />
+    <img src="@($"/images/{Model.product.Id}.jpg")"
+         alt="@Model.product.Name"
+         class="img-thumbnail"
+         />
+    <p class="py-5  text-justify" > @Model.product.Description</p>
+    <p > قیمت: @Model.product.Item.Price</p>
+    <dl>
+        @foreach (var item in Model.Categories)
+        {
+            <dt>@item.Name</dt>
+            <dd>@item.Description</dd>
+        }
+
+    </dl>
+    <div>
+        <a class="btn btn-primary"
+           asp-controller="Home"
+           asp-action="AddToCart"
+           asp-route-ItemId="@Model.product.ItemId"
+           
+           > افزودن به سبد خرید</a>
+
+    </div>
+
+
+</div>
+
