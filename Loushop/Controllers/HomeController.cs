@@ -81,6 +81,7 @@ namespace Loushop.Controllers
                 CartItems = _cart.CartItems,
                 OrderTotal = _cart.CartItems.Sum(c=>c.getTotalPrice())
             };
+
             return View(CartVM);
         }
 
