@@ -1,4 +1,5 @@
 ﻿using Loushop.Data;
+using Loushop.Data.Repositories;
 using Loushop.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -8,26 +9,21 @@ using System.Threading.Tasks;
 
 namespace Loushop.Components
 {
-    public class ProductGroupsComponents: ViewComponent
+    public class ProductGroupsComponents : ViewComponent
     {
-        private LouShopContext _context;
+       private IGroupRepository _groupRepository;
 
-
-        public ProductGroupsComponents(LouShopContext context)
+        public ProductGroupsComponents(IGroupRepository groupRepository)
         {
-            _context = context;
+            _groupRepository = groupRepository;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var categories = _context.categories
-                .Select(c => new ShowGroupViewModel()
-                {
-                    GroupId = c.Id,
-                    Name = c.Name,
-                    ProductCount = _context.CategoryToProducts.Count(g => g.CategoryId == c.Id)
-                }).ToList();
-            return View("/Views/Components/ProductGroupsComponent.cshtml", categories);
+            return View("/Views/Components/ProductGroupsComponent.cshtml",model: _groupRepository.GetGroupForShow());
         }
+
+      
     }
 }
+

@@ -1,8 +1,11 @@
 using FluentAssertions.Common;
 using Loushop.Data;
+using Loushop.Data.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,14 +32,33 @@ namespace Loushop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddRazorPages();
             #region Db Context
 
             services.AddDbContext<LouShopContext>(options =>
-            { options.UseSqlServer("Data Source =.;Initial Catalog=LouShop_DB;Integrated Security=true; User Id = sa; Password = 123;"); });
+            { options.UseSqlServer("Data Source =.;Initial Catalog=LouShop_DB;Integrated Security=true; User Id = sa; Password = 123;TrustServerCertificate = True;"); });
+            #endregion
+            #region IoC
+
+            services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            //services.AddSingleton<IGroupRepository, GroupRepository>();
+            //services.AddTransient<IGroupRepository, GroupRepository>();
+
+            #endregion
+
+            #region Authentication
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(option =>
+                {
+                    option.LoginPath = "/Account/Login";
+                    option.LogoutPath = "/Account/Logout";
+                    option.ExpireTimeSpan = TimeSpan.FromDays(10);
+                });
+
             #endregion
         }
-
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -56,9 +78,15 @@ namespace Loushop
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapDefaultControllerRoute();
+            });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

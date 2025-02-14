@@ -6,6 +6,11 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.Ajax.Utilities;
 
 namespace Loushop.Controllers
 {
@@ -13,7 +18,7 @@ namespace Loushop.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private LouShopContext _contex;
-        private static Cart _cart = new Cart();
+        
 
 
         public object Products { get; private set; }
@@ -26,7 +31,7 @@ namespace Loushop.Controllers
 
         public IActionResult Index()
         {
-            var Products = _contex.Products
+            var Products = _contex.Products 
 
                 .ToList();
             return View(Products);
@@ -35,7 +40,7 @@ namespace Loushop.Controllers
         public IActionResult Detail(int id)
         {
             var Product = _contex.Products
-                .Include(navigationPropertyPath: p => p.Item)
+                .Include(p => p.Item)
                 .SingleOrDefault(p => p.Id == id);
 
             if (Product == null)
@@ -58,36 +63,76 @@ namespace Loushop.Controllers
 
             return View(vm);
         }
-
+        [Authorize]
         public IActionResult AddToCart(int itemId)
         {
             var product = _contex.Products.Include(navigationPropertyPath: p => p.Item).SingleOrDefault(p => p.ItemId == itemId);
             if (product != null)
             {
-                var cartItem = new CartItem()
+                int userId = int.Parse(User.FindFirstValue(claimType: ClaimTypes.NameIdentifier).ToString());
+                var order = _contex.Orders.FirstOrDefault(o => o.UserId == userId && !o.IsFinaly);
+             if (order !=null)
                 {
-                    Item = product.Item,
-                    Quantity = 1
-                };
+                    var OrderDetail =
+                        _contex.OrderDetails.FirstOrDefault(d=>
+                        d.OrderId==order.OrderId && d.ProductId== product.Id );
 
-                _cart.addItem(cartItem);
+                    if( OrderDetail!=null)
+                    {
+                        OrderDetail.Count += 1;
+                    }
+
+                    else
+
+                    {
+                        _contex.OrderDetails.Add(new OrderDetail()
+                        {
+                            OrderId = order.OrderId,
+                            ProductId = product.Id,
+                            Price = product.Item.Price,
+                            Count = 1
+                        });
+                    }
+                }
+
+             else
+                {
+                    order = new Order()
+                    {
+                        IsFinaly= false,
+                        CreateDate = DateTime.Now,
+                        UserId = userId
+                    };
+                    _contex.Orders.Add(order);
+                    _contex.SaveChanges();
+                    _contex.OrderDetails.Add(new OrderDetail()
+                    {
+                        OrderId = order.OrderId,
+                        ProductId = product.Id,
+                        Price = product.Item.Price,
+                        Count=1
+                    });
+                }
+               
             }
             return RedirectToAction("ShowCart");
         }
+        [Authorize]
         public IActionResult ShowCart()
         {
-            var CartVM = new CartViewModel()
-            {
-                CartItems = _cart.CartItems,
-                OrderTotal = _cart.CartItems.Sum(c=>c.getTotalPrice())
-            };
 
-            return View(CartVM);
+            int userId = int.Parse(User.FindFirstValue(claimType: ClaimTypes.NameIdentifier).ToString());
+            var order = _contex.Orders.Where(o => o.UserId == userId)
+                .Include(navigationPropertyPath: o => o.OrderDetails)
+                .ThenInclude(c => c.Product).FirstOrDefault();
+            return View(order);
         }
 
-        public IActionResult RemoveCart(int itemId)
+        public IActionResult RemoveCart(int detailId)
         {
-            _cart.removeItem(itemId); 
+            var orderDetail = _contex.OrderDetails.Find(detailId);
+            _contex.Remove(orderDetail);
+            _contex.SaveChanges();
             return RedirectToAction("ShowCart");
         }
 

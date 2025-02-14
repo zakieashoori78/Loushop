@@ -4,14 +4,16 @@ using Loushop.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Loushop.Migrations
 {
     [DbContext(typeof(LouShopContext))]
-    partial class LouShopContextModelSnapshot : ModelSnapshot
+    [Migration("20250111175716_User_Email")]
+    partial class User_Email
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,60 +180,6 @@ namespace Loushop.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Loushop.Models.Order", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsFinaly")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UsersUserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderId");
-
-                    b.HasIndex("UsersUserId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("Loushop.Models.OrderDetail", b =>
-                {
-                    b.Property<int>("DetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DetailId");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrderDetails");
-                });
-
             modelBuilder.Entity("Loushop.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -326,34 +274,6 @@ namespace Loushop.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Loushop.Models.Order", b =>
-                {
-                    b.HasOne("Loushop.Models.Users", "Users")
-                        .WithMany("Orders")
-                        .HasForeignKey("UsersUserId");
-
-                    b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("Loushop.Models.OrderDetail", b =>
-                {
-                    b.HasOne("Loushop.Models.Order", "Order")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Loushop.Models.Product", "Product")
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("Loushop.Models.Product", b =>
                 {
                     b.HasOne("Loushop.Models.Item", "Item")
@@ -375,21 +295,9 @@ namespace Loushop.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Loushop.Models.Order", b =>
-                {
-                    b.Navigation("OrderDetails");
-                });
-
             modelBuilder.Entity("Loushop.Models.Product", b =>
                 {
                     b.Navigation("categoryToProducts");
-
-                    b.Navigation("OrderDetails");
-                });
-
-            modelBuilder.Entity("Loushop.Models.Users", b =>
-                {
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,36 +12,37 @@ namespace Loushop.Data
         public LouShopContext(DbContextOptions<LouShopContext> options) : base(options)
         {
 
-
         }
 
         public DbSet<Category> categories { get; set; }
         public DbSet<CategoryToProduct> CategoryToProducts { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Item> Items { get; set; }
-
-
+        public DbSet<Users> Users { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<OrderDetail>().HasKey(o => o.DetailId); 
+
             modelBuilder.Entity<CategoryToProduct>()
                 .HasKey(t => new { t.ProductId, t.CategoryId });
 
-            //modelBuilder.Entity<Product>(
+            modelBuilder.Entity<Users>().HasKey(u => u.UserId);
 
-            //    p =>
-            //    {
-            //        p.HasKey(w => w.Id);
-            //        p.OwnsOne<Item>(navigationExpression: w => w.Item);
-            //        p.HasOne<Item>(navigationExpression: w => w.Item).WithOne(navigationExpression: w => w.Product)
-            //        .HasForeignKey<Item>(w => w.Id);
-            //    }
-            //    );
+         
 
 
 
-            #region seed Data Category
-            modelBuilder.Entity<Category>().HasData(new Category()
+
+
+
+
+
+
+        #region seed Data Category
+        modelBuilder.Entity<Category>().HasData(new Category()
             {
                 Id = 1,
                 Name = "لباس ورزشی",

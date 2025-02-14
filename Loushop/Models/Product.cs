@@ -16,6 +16,6 @@ namespace Loushop.Models
 
         public ICollection<CategoryToProduct> categoryToProducts { get; set; }
         public Item Item { get; set; }
-
+        public List<OrderDetail> OrderDetails { get; set; }
     }
 }
