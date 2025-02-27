@@ -33,6 +33,9 @@
 
     </table>
     <h5>جمع کل : @Model.OrderDetails.Sum(s => s.Count * s.Price)</h5>
+    <p>
+        <a class="btn btn-success" asp-action="Payment">پرداخت</a>
+    </p>
 }
 else
 {

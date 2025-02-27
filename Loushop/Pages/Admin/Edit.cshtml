@@ -1,11 +1,12 @@
 ﻿@page
-@model Loushop.Pages.Admin.AddModel
+@model Loushop.Pages.Admin.EditModel
 @{
-    ViewData["Title"] = "Add";
+    ViewData["Title"] = "ویرایش";
 }
-<h1>افزودن کالا</h1>
+<h1>ویریش کالا</h1>
 <hr />
 <form method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Product.Id" />
     <dl class="dl-horizontal">
         <dd><label asp-for="Product.Name"></label></dd>
         <dt>
@@ -37,13 +38,17 @@
             @foreach (var item in Model.Product.Categories)
             {
                 <p>
-                    <input type="checkbox" name="selectedGroups" value="@item.Id" /> @item.Name
+                    <input type="checkbox" name="selectedGroups" value="@item.Id" @((Model.GoupsProduct.Any(c => c == item.Id) ? "checked" : "")) /> @item.Name
                 </p>
             }
         </dt>
+        <dd></dd>
         <dd></dd>
         <dt>
             <input type="submit" class="btn btn-success" value="ثبت" />
         </dt>
     </dl>
+
+
+
 </form>

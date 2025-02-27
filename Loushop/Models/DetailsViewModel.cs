@@ -7,7 +7,7 @@ namespace Loushop.Models
 {
     public class DetailsViewModel
     {
-        public Product product { get; set; }
+        public Product Product { get; set; }
         public List<Category> Categories { get; set; }
     }
 }

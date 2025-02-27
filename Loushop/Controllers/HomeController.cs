@@ -6,49 +6,42 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using Microsoft.Ajax.Utilities;
+using ZarinpalSandbox;
 
 namespace Loushop.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private LouShopContext _contex;
-        
+        private readonly LouShopContext _context;
 
-
-        public object Products { get; private set; }
-
-        public HomeController(ILogger<HomeController> logger, LouShopContext contex)
+        public HomeController(ILogger<HomeController> logger, LouShopContext context)
         {
             _logger = logger;
-            _contex = contex;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            var Products = _contex.Products 
-
-                .ToList();
-            return View(Products);
+            var products = _context.Products.ToList();
+            return View(products);
         }
 
         public IActionResult Detail(int id)
         {
-            var Product = _contex.Products
+            var product = _context.Products
                 .Include(p => p.Item)
                 .SingleOrDefault(p => p.Id == id);
 
-            if (Product == null)
+            if (product == null)
             {
                 return NotFound();
             }
 
-            var categories = _contex.Products
+            var categories = _context.Products
                 .Where(p => p.Id == id)
                 .SelectMany(c => c.categoryToProducts)
                 .Select(ca => ca.Category)
@@ -56,36 +49,37 @@ namespace Loushop.Controllers
 
             var vm = new DetailsViewModel()
             {
-                product = Product,
+                Product = product,
                 Categories = categories
-
             };
 
             return View(vm);
         }
+
         [Authorize]
         public IActionResult AddToCart(int itemId)
         {
-            var product = _contex.Products.Include(navigationPropertyPath: p => p.Item).SingleOrDefault(p => p.ItemId == itemId);
+            var product = _context.Products
+                .Include(p => p.Item)
+                .SingleOrDefault(p => p.ItemId == itemId);
+
             if (product != null)
             {
-                int userId = int.Parse(User.FindFirstValue(claimType: ClaimTypes.NameIdentifier).ToString());
-                var order = _contex.Orders.FirstOrDefault(o => o.UserId == userId && !o.IsFinaly);
-             if (order !=null)
+                int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var order = _context.Orders.FirstOrDefault(o => o.UserId == userId && !o.IsFinaly);
+
+                if (order != null)
                 {
-                    var OrderDetail =
-                        _contex.OrderDetails.FirstOrDefault(d=>
-                        d.OrderId==order.OrderId && d.ProductId== product.Id );
+                    var orderDetail = _context.OrderDetails
+                        .FirstOrDefault(d => d.OrderId == order.OrderId && d.ProductId == product.Id);
 
-                    if( OrderDetail!=null)
+                    if (orderDetail != null)
                     {
-                        OrderDetail.Count += 1;
+                        orderDetail.Count += 1;
                     }
-
                     else
-
                     {
-                        _contex.OrderDetails.Add(new OrderDetail()
+                        _context.OrderDetails.Add(new OrderDetail
                         {
                             OrderId = order.OrderId,
                             ProductId = product.Id,
@@ -94,50 +88,60 @@ namespace Loushop.Controllers
                         });
                     }
                 }
-
-             else
+                else
                 {
-                    order = new Order()
+                    order = new Order
                     {
-                        IsFinaly= false,
+                        IsFinaly = false,
                         CreateDate = DateTime.Now,
                         UserId = userId
                     };
-                    _contex.Orders.Add(order);
-                    _contex.SaveChanges();
-                    _contex.OrderDetails.Add(new OrderDetail()
+
+                    _context.Orders.Add(order);
+                    _context.SaveChanges();
+
+                    _context.OrderDetails.Add(new OrderDetail
                     {
                         OrderId = order.OrderId,
                         ProductId = product.Id,
                         Price = product.Item.Price,
-                        Count=1
+                        Count = 1
                     });
                 }
-               
+
+                _context.SaveChanges();
             }
+
             return RedirectToAction("ShowCart");
         }
+
         [Authorize]
         public IActionResult ShowCart()
         {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var order = _context.Orders
+                .Where(o => o.UserId == userId && !o.IsFinaly)
+                .Include(o => o.OrderDetails)
+                .ThenInclude(d => d.Product)
+                .FirstOrDefault();
 
-            int userId = int.Parse(User.FindFirstValue(claimType: ClaimTypes.NameIdentifier).ToString());
-            var order = _contex.Orders.Where(o => o.UserId == userId)
-                .Include(navigationPropertyPath: o => o.OrderDetails)
-                .ThenInclude(c => c.Product).FirstOrDefault();
             return View(order);
         }
 
         public IActionResult RemoveCart(int detailId)
         {
-            var orderDetail = _contex.OrderDetails.Find(detailId);
-            _contex.Remove(orderDetail);
-            _contex.SaveChanges();
+            var orderDetail = _context.OrderDetails.Find(detailId);
+
+            if (orderDetail != null)
+            {
+                _context.OrderDetails.Remove(orderDetail);
+                _context.SaveChanges();
+            }
+
             return RedirectToAction("ShowCart");
         }
 
-
-        [Route(template: "Discounts")]
+        [Route("Discounts")]
         public IActionResult Discounts()
         {
             return View();
@@ -152,6 +156,58 @@ namespace Loushop.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Authorize]
+        public IActionResult Payment()
+        {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var order = _context.Orders
+                .Include(o => o.OrderDetails)
+                .FirstOrDefault(o => o.UserId == userId && !o.IsFinaly);
+
+            if (order == null)
+                return NotFound();
+
+            var payment = new Payment((int)order.OrderDetails.Sum(d => d.Price));
+            var res = payment.PaymentRequest($"پرداخت فاکتور شماره {order.OrderId}", $"http://localhost:44369/Home/OnlinePayment/{order.OrderId}", "Zakie78.ashoori@gmail.com", "09197070750");
+
+            if (res.Result.Status == 100)
+            {
+                return Redirect($"https://sandbox.zarinpal.com/pg/StartPay/{res.Result.Authority}");
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        public IActionResult OnlinePayment(int id)
+        {
+            if (!string.IsNullOrEmpty(HttpContext.Request.Query["Status"]) &&
+                HttpContext.Request.Query["Status"].ToString().ToLower() == "ok" &&
+                !string.IsNullOrEmpty(HttpContext.Request.Query["Authority"]))
+            {
+                string authority = HttpContext.Request.Query["Authority"];
+                var order = _context.Orders
+                    .Include(o => o.OrderDetails)
+                    .FirstOrDefault(o => o.OrderId == id);
+
+                var payment = new Payment((int)order.OrderDetails.Sum(d => d.Price));
+                var res = payment.Verification(authority).Result;
+
+                if (res.Status == 100)
+                {
+                    order.IsFinaly = true;
+                    _context.Orders.Update(order);
+                    _context.SaveChanges();
+
+                    ViewBag.Code = res.RefId;
+                    return View();
+                }
+            }
+
+            return NotFound();
         }
     }
 }
