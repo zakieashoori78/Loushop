@@ -9,7 +9,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using ZarinpalSandbox;
+using Loushop.services;
+using Loushop.Dtos.RequestDto;
 
 namespace Loushop.Controllers
 {
@@ -17,11 +18,12 @@ namespace Loushop.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly LouShopContext _context;
-
-        public HomeController(ILogger<HomeController> logger, LouShopContext context)
+        private readonly IPaymentService paymentService;
+        public HomeController(ILogger<HomeController> logger, LouShopContext context, IPaymentService paymentService)
         {
             _logger = logger;
             _context = context;
+            this.paymentService = paymentService;
         }
 
         public IActionResult Index()
@@ -159,22 +161,26 @@ namespace Loushop.Controllers
         }
 
         [Authorize]
-        public IActionResult Payment()
+        public async Task<IActionResult> Payment()
         {
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var order = _context.Orders
                 .Include(o => o.OrderDetails)
                 .FirstOrDefault(o => o.UserId == userId && !o.IsFinaly);
-
             if (order == null)
                 return NotFound();
 
-            var payment = new Payment((int)order.OrderDetails.Sum(d => d.Price));
-            var res = payment.PaymentRequest($"پرداخت فاکتور شماره {order.OrderId}", $"http://localhost:44369/Home/OnlinePayment/{order.OrderId}", "Zakie78.ashoori@gmail.com", "09197070750");
-
-            if (res.Result.Status == 100)
+            var dto = new PaymentDto
             {
-                return Redirect($"https://sandbox.zarinpal.com/pg/StartPay/{res.Result.Authority}");
+                Amount = order.OrderDetails.Sum(d => d.Price * d.Count),
+                UserId = "",
+                OrderId = order.OrderId
+            };
+            var payment = await paymentService.Request(dto);
+
+            if (!string.IsNullOrEmpty(payment.payLink))
+            {
+                return Redirect(payment.payLink);
             }
             else
             {
@@ -184,27 +190,23 @@ namespace Loushop.Controllers
 
         public IActionResult OnlinePayment(int id)
         {
-            if (!string.IsNullOrEmpty(HttpContext.Request.Query["Status"]) &&
+            if (HttpContext.Request.Query["Status"] != "" &&
                 HttpContext.Request.Query["Status"].ToString().ToLower() == "ok" &&
-                !string.IsNullOrEmpty(HttpContext.Request.Query["Authority"]))
+                HttpContext.Request.Query["Authority"] != "")
             {
-                string authority = HttpContext.Request.Query["Authority"];
-                var order = _context.Orders
-                    .Include(o => o.OrderDetails)
+                string authority = HttpContext.Request.Query["Authority"].ToString();
+                var order = _context.Orders.Include(o => o.OrderDetails)
                     .FirstOrDefault(o => o.OrderId == id);
-
-                var payment = new Payment((int)order.OrderDetails.Sum(d => d.Price));
-                var res = payment.Verification(authority).Result;
-
-                if (res.Status == 100)
-                {
-                    order.IsFinaly = true;
-                    _context.Orders.Update(order);
-                    _context.SaveChanges();
-
-                    ViewBag.Code = res.RefId;
-                    return View();
-                }
+                //var payment = new Payment((int)order.OrderDetails.Sum(d => d.Price));
+                //var res = payment.Verification(authority).Result;
+                //if (res.Status == 100)
+                //{
+                //    order.IsFinaly = true;
+                //    _context.Orders.Update(order);
+                //    _context.SaveChanges();
+                //    ViewBag.code = res.RefId;
+                //    return View();
+                //}
             }
 
             return NotFound();

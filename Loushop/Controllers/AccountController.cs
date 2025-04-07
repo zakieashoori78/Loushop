@@ -116,6 +116,7 @@ namespace Loushop.Controllers
     {
         new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
         new Claim(ClaimTypes.Name, user.Email),
+         new Claim("IsAdmin", user.IsAdmin.ToString()),
     };
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);

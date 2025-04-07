@@ -1,11 +1,116 @@
 ﻿@page
 @model Loushop.Pages.Admin.AddModel
 @{
-    ViewData["Title"] = "Add";
+    ViewData["Title"] = "افزودن کالا";
 }
-<h1>افزودن کالا</h1>
-<hr />
-<form method="post" enctype="multipart/form-data">
+
+<div class="container-fluid mt-5">
+    <h1 class="text-center text-primary mb-4">افزودن کالا</h1>
+    <hr />
+    <form method="post" enctype="multipart/form-data" class="p-4 bg-light rounded shadow-sm">
+        <div class="row">
+            <!-- ستون اول -->
+            <div class="col-md-6">
+                <!-- نام محصول -->
+                <div class="form-group">
+                    <label asp-for="Product.Name" class="font-weight-bold">نام محصول:</label>
+                    <input asp-for="Product.Name" class="form-control border-primary" />
+                    <span asp-validation-for="Product.Name" class="text-danger"></span>
+                </div>
+
+                <!-- توضیحات محصول -->
+                <div class="form-group">
+                    <label asp-for="Product.Description" class="font-weight-bold">توضیحات محصول:</label>
+                    <textarea asp-for="Product.Description" class="form-control border-primary"></textarea>
+                    <span asp-validation-for="Product.Description" class="text-danger"></span>
+                </div>
+
+                <!-- قیمت محصول -->
+                <div class="form-group">
+                    <label asp-for="Product.Price" class="font-weight-bold">قیمت محصول:</label>
+                    <input asp-for="Product.Price" class="form-control border-primary" />
+                    <span asp-validation-for="Product.Price" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- ستون دوم -->
+            <div class="col-md-6">
+                <!-- موجودی -->
+                <div class="form-group">
+                    <label asp-for="Product.QuantityInStock" class="font-weight-bold">موجودی:</label>
+                    <input asp-for="Product.QuantityInStock" class="form-control border-primary" />
+                    <span asp-validation-for="Product.QuantityInStock" class="text-danger"></span>
+                </div>
+
+                <!-- تصویر محصول -->+
+                <div class="form-group">
+                    <label asp-for="Product.Picture" class="font-weight-bold">تصویر محصول:</label>
+                    <input asp-for="Product.Picture" class="form-control-file" />
+                    <span asp-validation-for="Product.Picture" class="text-danger"></span>
+                </div>
+
+                <!-- دسته‌بندی‌ها -->
+                <div class="form-group">
+                    <label for="categoriesDropdown" class="font-weight-bold">انتخاب دسته‌بندی‌ها:</label>
+                    @if (Model?.Product?.Categories != null && Model.Product.Categories.Any())
+                    {
+                        @* <select id="categoriesDropdown" name="selectedGroups" class="form-control border-primary">
+                            @foreach (var item in Model.Product.Categories)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select> *@
+                       @*  <select id="categoriesDropdown" name="Product.SelectedCategoryId" class="form-control border-primary">
+                            @foreach (var item in Model.Product.Categories)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select> *@
+                        <select id="categoriesDropdown" name="Product.Categories[0].Id" class="form-control border-primary">
+                            @foreach (var item in Model.Product.Categories)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+
+
+                    }
+                    else
+                    {
+                        <p class="text-danger">لطفاً دسته‌بندی‌ها را مشخص کنید.</p>
+                    }
+                    <span asp-validation-for="Product.Categories" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- دکمه ارسال -->
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success btn-lg">ثبت کالا</button>
+        </div>
+    </form>
+</div>
+
+
+
+@* @if (Model?.Product?.Categories != null && Model.Product.Categories.Any())
+{
+    <select id="categoriesDropdown" name="selectedGroups" class="form-select" aria-label="انتخاب دسته‌بندی‌ها:">
+
+        @foreach (var item in Model.Product.Categories)
+        {
+            <option value="@item.Id">@item.Name</option>
+
+        }
+    </select>
+    <span asp-validation-for="Product.Categories" class="text-danger"></span> <!-- نمایش پیام خطا -->
+}
+else
+{
+    <p class="text-danger">لطفاً دسته‌بندی‌ها را مشخص کنید.</p>
+} *@
+
+@* <form method="post" enctype="multipart/form-data">
     <dl class="dl-horizontal">
         <dd><label asp-for="Product.Name"></label></dd>
         <dt>
@@ -46,4 +151,4 @@
             <input type="submit" class="btn btn-success" value="ثبت" />
         </dt>
     </dl>
-</form>
+</form> *@

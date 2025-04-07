@@ -34,8 +34,8 @@ namespace Loushop.Pages.Admin
                 {
                     Id = s.Id,
                     Name = s.Name,
-                    Descripthion = s.Description,
-                   QuantityInStoke = s.Item.QuantityInStoke,
+                    Description = s.Description,
+                    QuantityInStock = s.Item.QuantityInStoke,
                     Price = s.Item.Price
                 }).FirstOrDefault();
 
@@ -55,9 +55,9 @@ namespace Loushop.Pages.Admin
             var item = _context.Items.First(p => p.Id == product.ItemId);
 
             product.Name = Product.Name;
-            product.Description = Product.Descripthion;
+            product.Description = Product.Description;
             item.Price = Product.Price;
-            item.QuantityInStoke = Product.QuantityInStoke;
+            item.QuantityInStoke = Product.QuantityInStock;
 
 
 

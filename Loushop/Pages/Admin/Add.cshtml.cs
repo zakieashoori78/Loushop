@@ -34,13 +34,21 @@ namespace Loushop.Pages.Admin
 
         public IActionResult OnPost()
         {
+            if (Product.Categories == null || Product.Categories.Count == 0)
+            {
+                Product.Categories = _context.categories.ToList();
+                ModelState.AddModelError("Product.Categories", "لطفاً حداقل یک دسته‌بندی انتخاب کنید.");
+            }
             if (!ModelState.IsValid)
+            {
+                Product.Categories = _context.categories.ToList();
                 return Page();
+            }
 
             var item = new Item()
             {
                 Price = Product.Price,
-                QuantityInStoke = Product.QuantityInStoke
+                QuantityInStoke = Product.QuantityInStock
             };
             _context.Add(item);
             _context.SaveChanges();
@@ -49,37 +57,30 @@ namespace Loushop.Pages.Admin
             {
                 Name = Product.Name,
                 Item = item,
-                Description = Product.Descripthion,
+                Description = Product.Description,
 
             };
             _context.Add(pro);
             _context.SaveChanges();
-     
+            _context.CategoryToProducts.Add(new CategoryToProduct()
+            {
+                CategoryId = Product.Categories[0].Id,
+                ProductId = pro.Id
+            });
+
+            _context.SaveChanges();
             if (Product.Picture?.Length > 0)
             {
                 string filePath = Path.Combine(Directory.GetCurrentDirectory(),
                     "wwwroot",
                     "images",
-                    Product.Id + Path.GetExtension(Product.Picture.FileName));
+                    pro.Id + Path.GetExtension(Product.Picture.FileName));
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     Product.Picture.CopyTo(stream);
                 }
             }
-
-            {
-                if (selectedGroups.Any() && selectedGroups.Count > 0)
-                    foreach (int gr in selectedGroups)
-                {
-                    _context.CategoryToProducts.Add(new CategoryToProduct()
-                    {
-                        CategoryId = gr,
-                        ProductId = pro.Id
-                    });
-                }
-
-                _context.SaveChanges();
-            }
+           
             return RedirectToPage("index");
         }
 
