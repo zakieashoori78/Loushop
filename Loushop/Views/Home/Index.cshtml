@@ -5,14 +5,19 @@
 }
 
 <div class="text-center">
-    <h1 class="display-3">به فروشگاه ما خوش آمدید</h1>
-    @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
+    <h1 class="display-3 text-primary">به فروشگاه ما خوش آمدید</h1>
+    <p class="lead">محصولات ما را مشاهده کنید و بهترین‌ها را انتخاب کنید.</p>
 
-    <div class="row">
-        @foreach (var Item in Model)
+    <div class="row g-4 mt-4">
+        @foreach (var item in Model)
         {
-           <partial name="_BoxProduct" model="@Item"> </partial>
+            <partial name="_BoxProduct" model="@item"></partial>
         }
     </div>
-   
 </div>
+
+
+
+ 
+
+

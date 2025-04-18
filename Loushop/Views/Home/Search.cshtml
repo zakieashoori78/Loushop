@@ -1,0 +1,45 @@
+﻿@using Loushop.ViewModels
+@using System.IO
+@model List<SearchDetailsViewModel>
+
+@if (!Model.Any())
+{
+    <p>هیچ نتیجه‌ای یافت نشد.</p>
+}
+else
+{
+    <h2>نتایج جستجو</h2>
+    @foreach (var details in Model)
+    {
+        <div class="product-item">
+            <h3>@details.Product.Name</h3>
+            @{
+                if (System.IO.File.Exists(($"{Directory.GetCurrentDirectory()}/wwwroot/images/{details.Product.Id}.jpg")))
+                {
+                    <img src="@($"/images/{details.Product.Id}.jpg")" alt="@details.Product.Name" class="img-thumbnail" />
+                }
+                if (System.IO.File.Exists(($"{Directory.GetCurrentDirectory()}/wwwroot/images/{details.Product.Id}.png")))
+                {
+                    <img src="@($"/images/{details.Product.Id}.png")" alt="@details.Product.Name" class="img-thumbnail" />
+                }
+            }
+            <p>@details.Product.Description</p>
+            <p>قیمت: @details.Product.Item.Price تومان</p>
+            <p>موجودی: @details.Product.Item.QuantityInStoke</p>
+            <dl>
+                @foreach (var category in details.Categories)
+                {
+                    <dt>@category.Name</dt>
+                    <dd>@category.Description</dd>
+                }
+                <dl>
+                </dl>
+                <a class="btn btn-primary"
+                   asp-controller="Home"
+                   asp-action="AddToCart"
+                   asp-route-itemId="@details.Product.Item.Id">
+                    افزودن به سبد خرید
+                </a>
+        </div>
+    }
+}

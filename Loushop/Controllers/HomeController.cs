@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Loushop.services;
 using Loushop.Dtos.RequestDto;
+using System.Collections.Generic;
+using Loushop.ViewModels;
+using Loushop.ViewModels.Search;
 
 namespace Loushop.Controllers
 {
@@ -197,19 +200,50 @@ namespace Loushop.Controllers
                 string authority = HttpContext.Request.Query["Authority"].ToString();
                 var order = _context.Orders.Include(o => o.OrderDetails)
                     .FirstOrDefault(o => o.OrderId == id);
-                //var payment = new Payment((int)order.OrderDetails.Sum(d => d.Price));
-                //var res = payment.Verification(authority).Result;
-                //if (res.Status == 100)
-                //{
-                //    order.IsFinaly = true;
-                //    _context.Orders.Update(order);
-                //    _context.SaveChanges();
-                //    ViewBag.code = res.RefId;
-                //    return View();
-                //}
             }
 
             return NotFound();
         }
+
+        public IActionResult Search(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                return View(new List<SearchDetailsViewModel>()); // اگر کوئری خالی باشد، لیست خالی بازگردانده می‌شود
+            }
+
+            var results = (from product in _context.Products
+                           join item in _context.Items on product.ItemId equals item.Id
+                           join categoryToProduct in _context.CategoryToProducts on product.Id equals categoryToProduct.ProductId
+                           join category in _context.categories on categoryToProduct.CategoryId equals category.Id
+                           where product.Name.Contains(query) || product.Description.Contains(query) || category.Name.Contains(query)
+                           select new SearchDetailsViewModel
+                           {
+                               Product = new SearchProductViewModel
+                               {
+                                   Id = product.Id,
+                                   Name = product.Name,
+                                   Description = product.Description,
+                                   Item = new SearchItemViewModel
+                                   {
+                                       Price = item.Price,
+                                       QuantityInStoke = item.QuantityInStoke
+                                   }
+                               },
+                               Categories = new List<SearchCategoryViewModel>
+                       {
+                           new SearchCategoryViewModel
+                           {
+                               Name = category.Name,
+                               Description = category.Description
+                           }
+                       }
+                           }).ToList();
+
+            return View(results);
+        }
+
+
+
     }
 }

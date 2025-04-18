@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Loushop.Models
+namespace Loushop.ViewModels
 {
     public class RegisterViewModel
     {

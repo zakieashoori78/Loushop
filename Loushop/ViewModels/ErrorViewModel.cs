@@ -1,6 +1,6 @@
 using System;
 
-namespace Loushop.Models
+namespace Loushop.ViewModels
 {
     public class ErrorViewModel
     {

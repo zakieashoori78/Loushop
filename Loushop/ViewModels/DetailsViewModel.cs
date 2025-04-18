@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Loushop.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Loushop.Models
+namespace Loushop.ViewModels
 {
     public class DetailsViewModel
     {

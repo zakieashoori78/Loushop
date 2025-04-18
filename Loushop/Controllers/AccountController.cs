@@ -9,8 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using static Loushop.Models.RegisterViewModel;
+using static Loushop.ViewModels.RegisterViewModel;
 using Microsoft.AspNetCore.Http;
+using Loushop.ViewModels;
 
 namespace Loushop.Controllers
 {

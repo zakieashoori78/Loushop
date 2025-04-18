@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Loushop.Data;
 using Loushop.Models;
+using Loushop.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;

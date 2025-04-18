@@ -1,4 +1,4 @@
-﻿namespace Loushop.Models
+﻿namespace Loushop.ViewModels
 {
     public class PaymentViewModel
     {
