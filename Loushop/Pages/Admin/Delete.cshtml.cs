@@ -7,6 +7,7 @@ using Loushop.Data;
 using Loushop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Loushop.Pages.Admin
 {
@@ -27,6 +28,15 @@ namespace Loushop.Pages.Admin
 
         public IActionResult OnPost()
         {
+         
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            if (Product.Id == 0)
+            {
+                return Page();
+            }
             var product = _context.Products.Find(Product.Id);
             var item = _context.Items.First(p => p.Id == product.ItemId);
             _context.Items.Remove(item);

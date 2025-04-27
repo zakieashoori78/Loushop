@@ -1,45 +1,126 @@
-﻿@using Loushop.ViewModels
-@using System.IO
+﻿@using System.IO
+@using Loushop.ViewModels
 @model List<SearchDetailsViewModel>
+<style>
+    .modal-content {
+        transition: all 0.3s ease;
+        border: none;
+    }
 
+        .modal-content:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+</style>
 @if (!Model.Any())
 {
     <p>هیچ نتیجه‌ای یافت نشد.</p>
 }
 else
 {
-    <h2>نتایج جستجو</h2>
-    @foreach (var details in Model)
-    {
-        <div class="product-item">
-            <h3>@details.Product.Name</h3>
-            @{
-                if (System.IO.File.Exists(($"{Directory.GetCurrentDirectory()}/wwwroot/images/{details.Product.Id}.jpg")))
-                {
-                    <img src="@($"/images/{details.Product.Id}.jpg")" alt="@details.Product.Name" class="img-thumbnail" />
-                }
-                if (System.IO.File.Exists(($"{Directory.GetCurrentDirectory()}/wwwroot/images/{details.Product.Id}.png")))
-                {
-                    <img src="@($"/images/{details.Product.Id}.png")" alt="@details.Product.Name" class="img-thumbnail" />
-                }
+    <h2 class="text-center my-4">نتایج جستجو</h2>
+    <div class="container">
+        <div class="row">
+            @foreach (var details in Model)
+            {
+                <!-- Card -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-primary">@details.Product.Name</h5>
+                            @{
+                                if (System.IO.File.Exists(($"{Directory.GetCurrentDirectory()}/wwwroot/images/{details.Product.Id}.jpg")))
+                                {
+                                    <img src="@($"/images/{details.Product.Id}.jpg")" alt="@details.Product.Name"
+                                         class="card-img-top img-fluid rounded mb-3" style="max-height: 200px; object-fit: cover;" />
+                                }
+                                else if (System.IO.File.Exists(($"{Directory.GetCurrentDirectory()}/wwwroot/images/{details.Product.Id}.png")))
+                                {
+                                    <img src="@($"/images/{details.Product.Id}.png")" alt="@details.Product.Name"
+                                         class="card-img-top img-fluid rounded mb-3" style="max-height: 200px; object-fit: cover;" />
+                                }
+                            }
+                            <p class="card-text flex-grow-1">
+                                @details.Product.Description.Substring(0, Math.Min(details.Product.Description.Length, 50))...
+                                <a href="#" class="text-decoration-none fw-bold"
+                                   data-bs-toggle="modal" data-bs-target="#descriptionModal-@details.Product.Id">
+                                    ادامه مطلب <i class="fas fa-chevron-left"></i>
+                                </a>
+                            </p>
+                            <div class="mt-auto">
+                                <p class="text-success fw-bold">قیمت: @details.Product.Item.Price.ToString("N0") تومان</p>
+                                <p class="text-muted">موجودی: @details.Product.Item.QuantityInStoke</p>
+                                <a class="btn btn-primary btn-block"
+                                   asp-controller="Home"
+                                   asp-action="AddToCart"
+                                   asp-route-itemId="@details.Product.Item.Id">
+                                    <i class="fas fa-cart-plus"></i> افزودن به سبد خرید
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="descriptionModal-@details.Product.Id" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content border-0 shadow">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title">
+                                    <i class="fas fa-info-circle me-2"></i> @details.Product.Name
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        @{
+                                            if (System.IO.File.Exists(($"{Directory.GetCurrentDirectory()}/wwwroot/images/{details.Product.Id}.jpg")))
+                                            {
+                                                <img src="@($"/images/{details.Product.Id}.jpg")" alt="@details.Product.Name"
+                                                     class="img-fluid rounded shadow" />
+                                            }
+                                            else if (System.IO.File.Exists(($"{Directory.GetCurrentDirectory()}/wwwroot/images/{details.Product.Id}.png")))
+                                            {
+                                                <img src="@($"/images/{details.Product.Id}.png")" alt="@details.Product.Name"
+                                                     class="img-fluid rounded shadow" />
+                                            }
+                                        }
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted mb-3">توضیحات محصول:</h6>
+                                        <p class="lead">@details.Product.Description</p>
+                                        <hr>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-success fs-6">@details.Product.Item.Price.ToString("N0") تومان</span>
+                                            <span class="badge bg-info text-dark fs-6">موجودی: @details.Product.Item.QuantityInStoke</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-light">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                    <i class="fas fa-times me-1"></i> بستن
+                                </button>
+                                <a class="btn btn-primary"
+                                   asp-controller="Home"
+                                   asp-action="AddToCart"
+                                   asp-route-itemId="@details.Product.Item.Id">
+                                    <i class="fas fa-cart-plus me-1"></i> افزودن به سبد خرید
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
-            <p>@details.Product.Description</p>
-            <p>قیمت: @details.Product.Item.Price تومان</p>
-            <p>موجودی: @details.Product.Item.QuantityInStoke</p>
-            <dl>
-                @foreach (var category in details.Categories)
-                {
-                    <dt>@category.Name</dt>
-                    <dd>@category.Description</dd>
-                }
-                <dl>
-                </dl>
-                <a class="btn btn-primary"
-                   asp-controller="Home"
-                   asp-action="AddToCart"
-                   asp-route-itemId="@details.Product.Item.Id">
-                    افزودن به سبد خرید
-                </a>
         </div>
-    }
+    </div>
 }
