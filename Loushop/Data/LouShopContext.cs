@@ -77,21 +77,21 @@ namespace Loushop.Data
                 {
                     Id = 1,
                     Price = 850.0M,
-                    QuantityInStoke = 5
+                    QuantityInStocke = 5
                 },
 
                  new Item()
                  {
                      Id = 2,
                      Price = 321.0M,
-                     QuantityInStoke = 7
+                     QuantityInStocke = 7
                  },
 
                   new Item()
                   {
                       Id = 3,
                       Price = 2500,
-                      QuantityInStoke = 2
+                      QuantityInStocke = 2
                   });
 
 

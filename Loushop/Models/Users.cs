@@ -11,7 +11,7 @@ namespace Loushop.Models
 
     public class Users
     {
-        [key]
+        [Key]
         public int UserId { get; set; }
         [Required]
         [MaxLength(300)]

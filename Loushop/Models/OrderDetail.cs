@@ -21,7 +21,7 @@ namespace Loushop.Models
         [Required]
         public int Count { get; set; }
         public Order Order { get; set; }
-        [ForeignKey(name: "ProductId ")]
+        [ForeignKey(name: "ProductId")]
         public Product Product { get; set; }
 
 

@@ -89,7 +89,7 @@ namespace Loushop.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("QuantityInStoke")
+                    b.Property<int>("QuantityInStocke")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

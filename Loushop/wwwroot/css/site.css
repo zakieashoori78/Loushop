@@ -69,3 +69,52 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+.card-body {
+    min-height: 200px; /* مقدار را بسته به محتوا تنظیم کن */
+}
+.small-text {
+    font-size: 0.9rem;
+}
+.no-wrap-text {
+    white-space: nowrap;
+}
+
+
+.navbar-brand {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+}
+
+.search-bar {
+    display: flex;
+    max-width: 400px;
+    margin-right: auto;
+    align-items: center;
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 15px 0;
+}
+
+.modal-content {
+    transition: all 0.3s ease;
+    border: none;
+}
+
+    .modal-content:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }

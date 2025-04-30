@@ -62,41 +62,6 @@ namespace Loushop.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //public IActionResult Login(LoginViewModel login)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(login);
-        //    }
-
-        //    var user = _userRepository.GetUserForLogin(login.Email.ToLower(), login.Password);
-        //    if (user == null)
-        //    {
-        //        ModelState.AddModelError("Email", "اطلاعات صحیح نیست");
-        //        return View(login);
-        //    }
-
-        //    var claims = new List<Claim>
-        //    {
-        //        new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-        //        new Claim(ClaimTypes.Name, user.Email),
-        //       // new Claim("CodeMeli", user.Email),
-
-        //    };
-        //    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-        //    var principal = new ClaimsPrincipal(identity);
-
-        //    var properties = new AuthenticationProperties
-        //    {
-        //        IsPersistent = login.RememberMe
-        //    };
-
-        //    HttpContext.SignInAsync(principal, properties);
-
-        //    return Redirect("/");
-        //}
         [HttpPost]
 
         public async Task<IActionResult> Login(LoginViewModel login, string returnUrl = null)

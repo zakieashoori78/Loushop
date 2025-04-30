@@ -36,7 +36,7 @@ namespace Loushop.Pages.Admin
                     Id = s.Id,
                     Name = s.Name,
                     Description = s.Description,
-                    QuantityInStock = s.Item.QuantityInStoke,
+                    QuantityInStock = s.Item.QuantityInStocke,
                     Price = s.Item.Price
                 }).FirstOrDefault();
 
@@ -78,7 +78,7 @@ namespace Loushop.Pages.Admin
             product.Name = Product.Name;
             product.Description = Product.Description;
             item.Price = Product.Price;
-            item.QuantityInStoke = Product.QuantityInStock;
+            item.QuantityInStocke = Product.QuantityInStock;
             _context.SaveChanges();
 
             if (Product.Picture?.Length > 0)

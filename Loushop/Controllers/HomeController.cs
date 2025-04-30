@@ -146,12 +146,6 @@ namespace Loushop.Controllers
             return RedirectToAction("ShowCart");
         }
 
-        [Route("Discounts")]
-        public IActionResult Discounts()
-        {
-            return View();
-        }
-
         public IActionResult Privacy()
         {
             return View();
@@ -209,7 +203,7 @@ namespace Loushop.Controllers
         {
             if (string.IsNullOrEmpty(query))
             {
-                return View(new List<SearchDetailsViewModel>()); // اگر کوئری خالی باشد، لیست خالی بازگردانده می‌شود
+                return View(new List<SearchDetailsViewModel>());
             }
 
             var results = (from product in _context.Products
@@ -224,10 +218,11 @@ namespace Loushop.Controllers
                                    Id = product.Id,
                                    Name = product.Name,
                                    Description = product.Description,
+                                   ImagePath = product.ImagePath,
                                    Item = new SearchItemViewModel
                                    {
                                        Price = item.Price,
-                                       QuantityInStoke = item.QuantityInStoke
+                                       QuantityInStocke = item.QuantityInStocke
                                    }
                                },
                                Categories = new List<SearchCategoryViewModel>
@@ -243,7 +238,10 @@ namespace Loushop.Controllers
             return View(results);
         }
 
-
+        public IActionResult ContactUs()
+        {
+            return View();
+        }
 
     }
 }

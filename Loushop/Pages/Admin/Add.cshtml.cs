@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Loushop.Data;
 using Loushop.Models;
 using Loushop.ViewModels;
@@ -49,18 +47,20 @@ namespace Loushop.Pages.Admin
             var item = new Item()
             {
                 Price = Product.Price,
-                QuantityInStoke = Product.QuantityInStock
+                QuantityInStocke = Product.QuantityInStock
             };
             _context.Add(item);
             _context.SaveChanges();
+            var imageFileName = item.Id + Path.GetExtension(Product.Picture.FileName);
 
             var pro = new Product()
             {
                 Name = Product.Name,
                 Item = item,
                 Description = Product.Description,
-
+                ImagePath = "/images/" + imageFileName
             };
+
             _context.Add(pro);
             _context.SaveChanges();
             _context.CategoryToProducts.Add(new CategoryToProduct()
@@ -71,12 +71,9 @@ namespace Loushop.Pages.Admin
 
             _context.SaveChanges();
             if (Product.Picture?.Length > 0)
-            {
-                string filePath = Path.Combine(Directory.GetCurrentDirectory(),
-                    "wwwroot",
-                    "images",
-                    pro.Id + Path.GetExtension(Product.Picture.FileName));
-                using (var stream = new FileStream(filePath, FileMode.Create))
+            {                
+                var savePath = Path.Combine("wwwroot/images", imageFileName);
+                using (var stream = new FileStream(savePath, FileMode.Create))
                 {
                     Product.Picture.CopyTo(stream);
                 }
@@ -84,7 +81,5 @@ namespace Loushop.Pages.Admin
            
             return RedirectToPage("index");
         }
-
-
     }
 }

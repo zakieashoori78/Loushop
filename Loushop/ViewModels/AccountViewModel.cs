@@ -25,7 +25,7 @@ namespace Loushop.ViewModels
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
         [MaxLength(50)]
         [DataType(DataType.Password)]
-        [Compare(otherProperty: "Password")]
+        [Compare("Password", ErrorMessage = "رمز عبور و تکرار آن مطابقت ندارند.")]
         [Display(Name = "تکرار کلمه عبور")]
         public string RePassword { get; set; }
     }

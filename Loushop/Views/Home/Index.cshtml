@@ -4,20 +4,18 @@
     ViewData["Title"] = "فروشگاه من";
 }
 
-<div class="text-center">
-    <h1 class="display-3 text-primary">به فروشگاه ما خوش آمدید</h1>
-    <p class="lead">محصولات ما را مشاهده کنید و بهترین‌ها را انتخاب کنید.</p>
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-4 text-primary">به فروشگاه ما خوش آمدید</h1>
+        <p class="lead text-muted">محصولات ما را مشاهده کنید و بهترین‌ها را انتخاب کنید.</p>
+        <hr />
+    </div>
 
-    <div class="row g-4 mt-4">
+    <!-- نمایش محصولات -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 align-items-stretch">
         @foreach (var item in Model)
         {
             <partial name="_BoxProduct" model="@item"></partial>
         }
     </div>
 </div>
-
-
-
- 
-
-

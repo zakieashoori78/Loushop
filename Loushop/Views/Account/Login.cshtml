@@ -5,37 +5,50 @@
     ViewData["Title"] = "Login";
 }
 
-<h1>ورود به سایت</h1>
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="text-primary">ورود به سایت</h1>
+        <p class="text-muted">اطلاعات حساب کاربری خود را وارد کنید</p>
+        <hr />
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Login" class="p-4 bg-light rounded shadow-sm">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
+                <!-- ایمیل -->
+                <div class="form-group">
+                    <label asp-for="Email" class="font-weight-bold text-secondary">ایمیل:</label>
+                    <input asp-for="Email" class="form-control border-primary" placeholder="ایمیل خود را وارد کنید" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
 
-<hr />
-<div class="row">
-    <div class="col-md-12">
-        <form asp-action="Login">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="ورود" class="btn btn-primary" />
-            </div>
-        </form>
+                <!-- رمز عبور -->
+                <div class="form-group mt-3">
+                    <label asp-for="Password" class="font-weight-bold text-secondary">رمز عبور:</label>
+                    <input asp-for="Password" type="password" class="form-control border-primary" placeholder="رمز عبور خود را وارد کنید" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <!-- یادآوری من -->
+                <div class="form-group form-check mt-3">
+                    <input class="form-check-input" asp-for="RememberMe" />
+                    <label class="form-check-label text-secondary">
+                        @Html.DisplayNameFor(model => model.RememberMe)
+                    </label>
+                </div>
+
+                <!-- دکمه ورود -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success btn-lg w-100">ورود</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

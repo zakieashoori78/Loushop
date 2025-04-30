@@ -2,40 +2,50 @@
 @model RegisterViewModel
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "ثبت نام";
 }
 
-<h1>ثبت نام</h1>
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="text-primary">ثبت نام در سایت</h1>
+        <p class="text-muted">لطفاً اطلاعات زیر را وارد کنید</p>
+        <hr />
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Register" class="p-4 bg-light rounded shadow-sm">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
+                <!-- ایمیل -->
+                <div class="form-group">
+                    <label asp-for="Email" class="font-weight-bold text-secondary">ایمیل:</label>
+                    <input asp-for="Email" type="email" class="form-control border-primary" placeholder="ایمیل خود را وارد کنید" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
 
-<hr />
-<div class="row">
-    <div class="col-md-12">
-        <form asp-action="Register">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RePassword" class="control-label"></label>
-                <input asp-for="RePassword" class="form-control" />
-                <span asp-validation-for="RePassword" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="ثبت نام" class="btn btn-success" />
-            </div>
-        </form>
+                <!-- رمز عبور -->
+                <div class="form-group mt-3">
+                    <label asp-for="Password" class="font-weight-bold text-secondary">رمز عبور:</label>
+                    <input asp-for="Password" type="password" class="form-control border-primary" placeholder="رمز عبور خود را وارد کنید" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <!-- تایید رمز عبور -->
+                <div class="form-group mt-3">
+                    <label asp-for="RePassword" class="font-weight-bold text-secondary">تایید رمز عبور:</label>
+                    <input asp-for="RePassword" type="password" class="form-control border-primary" placeholder="تایید رمز عبور خود را وارد کنید" />
+                    <span asp-validation-for="RePassword" class="text-danger"></span>
+                </div>
+
+                <!-- دکمه ثبت نام -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success btn-lg w-100">ثبت نام</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-@section Scripts
-{
-<partial name="_ValidationScriptsPartial"></partial>
-}
 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"></partial>
+}

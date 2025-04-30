@@ -18,7 +18,7 @@ namespace Loushop.Models
         public DateTime CreateDate {get; set;}
         public bool IsFinaly { get; set; }
 
-        [ForeignKey(name: "UserId ")]
+        [ForeignKey(name: "UserId")]
         public Users Users { get; set; }
         public List<OrderDetail> OrderDetails { get; set; }
     }
