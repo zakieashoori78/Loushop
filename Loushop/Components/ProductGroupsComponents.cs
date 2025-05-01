@@ -1,10 +1,5 @@
-﻿using Loushop.Data;
-using Loushop.Data.Repositories;
-using Loushop.Models;
+﻿using Loushop.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Loushop.Components

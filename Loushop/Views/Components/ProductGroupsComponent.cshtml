@@ -2,19 +2,11 @@
 @model IEnumerable<ShowGroupViewModel>
 
 <ul class="list-group">
-   @*  @foreach (var item in Model)
-    {
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            <a href="/Group/@item.GroupId/@item.Name">@item.Name</a>
-            <span class="badge badge-primary badge-pill">@item.ProductCount</span>
-        </li>
-    } *@
     @foreach (var item in Model)
     {
         var badgeClasses = new[] { "badge-primary", "badge-success", "badge-danger", "badge-warning", "badge-info" };
         var randomIndex = new Random().Next(badgeClasses.Length);
         var randomClass = badgeClasses[randomIndex];
-
         <li class="list-group-item d-flex justify-content-between align-items-center">
             <a href="/Group/@item.GroupId/@item.Name">@item.Name</a>
             <span class="badge @randomClass badge-pill">@item.ProductCount</span>
