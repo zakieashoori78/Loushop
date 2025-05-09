@@ -16,21 +16,18 @@
             <form asp-action="Login" class="p-4 bg-light rounded shadow-sm">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                <!-- ایمیل -->
                 <div class="form-group">
                     <label asp-for="Email" class="font-weight-bold text-secondary">ایمیل:</label>
                     <input asp-for="Email" class="form-control border-primary" placeholder="ایمیل خود را وارد کنید" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
-                <!-- رمز عبور -->
                 <div class="form-group mt-3">
                     <label asp-for="Password" class="font-weight-bold text-secondary">رمز عبور:</label>
                     <input asp-for="Password" type="password" class="form-control border-primary" placeholder="رمز عبور خود را وارد کنید" />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
-                <!-- یادآوری من -->
                 <div class="form-group form-check mt-3">
                     <input class="form-check-input" asp-for="RememberMe" />
                     <label class="form-check-label text-secondary">
@@ -38,17 +35,77 @@
                     </label>
                 </div>
 
-                <!-- دکمه ورود -->
                 <div class="text-center mt-4">
                     <button type="submit" class="btn btn-success btn-lg w-100">ورود</button>
                 </div>
             </form>
+
+            <div class="text-center mt-3">
+                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+                    فراموشی رمز عبور؟
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مودال فراموشی رمز عبور -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="forgotPasswordModalLabel">فراموشی رمز عبور</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="ForgotPassword" method="post">
+                    <div class="form-group">
+                        <label for="Email" class="font-weight-bold text-secondary">ایمیل خود را وارد کنید:</label>
+                        <input type="email" class="form-control" id="Email" name="Email" placeholder="ایمیل خود را وارد کنید" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block mt-3">ارسال رمز عبور</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        $(document).ready(function () {
+            $('#forgotPasswordModal').on('shown.bs.modal', function () {
+                $('#Email').trigger('focus');
+            });
+
+            // نمایش پیام موفقیت
+        @if (TempData["EmailSuccess"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ایمیل ارسال شد!',
+                        text: '@Html.Raw(TempData["EmailSuccess"]?.ToString())',
+                        confirmButtonText: 'باشه'
+                    });
+            </text>
+        }
+
+
+            // نمایش پیام خطا
+        @if (TempData["EmailError"] != null)
+        {
+            <text>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'خطا!',
+                        text: '@Html.Raw(TempData["EmailError"]?.ToString())',
+                        confirmButtonText: 'متوجه شدم'
+                    });
+            </text>
+        }
+
+        });
+    </script>
 }
+

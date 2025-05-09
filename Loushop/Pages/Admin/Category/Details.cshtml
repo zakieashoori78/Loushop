@@ -1,0 +1,39 @@
+﻿@page
+@model Loushop.Pages.Admin.Category.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Category Details</h1>
+
+    <!-- Category Details -->
+    <div>
+        <h4 class="mb-3">Category Information</h4>
+        <hr />
+
+        <!-- Description List -->
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Category.Name)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Category.Name)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Category.Description)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Category.Description)
+            </dd>
+        </dl>
+    </div>
+
+    <!-- Edit and Back Links -->
+    <div class="mt-3">
+        <a asp-page="./Edit" asp-route-id="@Model.Category.Id" class="btn btn-warning btn-sm">Edit</a>
+        <a asp-page="./Index" class="btn btn-secondary btn-sm">Back to List</a>
+    </div>
+</div>

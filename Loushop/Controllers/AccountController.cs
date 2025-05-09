@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using static Loushop.ViewModels.RegisterViewModel;
 using Microsoft.AspNetCore.Http;
 using Loushop.ViewModels;
+using Loushop.services;
 
 namespace Loushop.Controllers
 {
@@ -19,10 +20,12 @@ namespace Loushop.Controllers
     public class AccountController : Controller
     {
         private IUserRepository _userRepository;
+        private readonly IEmailSender _emailSender;
 
-        public AccountController(IUserRepository userRepository)
+        public AccountController(IUserRepository userRepository, IEmailSender emailSender)
         {
             _userRepository = userRepository;
+            _emailSender = emailSender;
         }
 
         #region Register
@@ -63,7 +66,6 @@ namespace Loushop.Controllers
         }
 
         [HttpPost]
-
         public async Task<IActionResult> Login(LoginViewModel login, string returnUrl = null)
         {
             if (!ModelState.IsValid)
@@ -102,6 +104,42 @@ namespace Loushop.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            try
+            {
+                var user = await _userRepository.GetUserByEmailAsync(email);
+                if (user != null)
+                {
+                    var body = $@"
+                <div style='font-family:Tahoma;'>
+                    <p>سلام {user.Email} عزیز،</p>
+                    <p>رمز عبور شما: <strong>{user.Password}</strong></p>
+                    <p>لطفاً پس از ورود، رمز خود را تغییر دهید.</p>
+                    <br/>
+                    <p style='color:#888;'>با احترام<br/>تیم پشتیبانی Loushop</p>
+                </div>";
+                    var subject = "بازیابی رمز عبور - فروشگاه Loushop";
+
+                    await _emailSender.SendEmailAsync(email, subject, body);
+
+                    TempData["EmailSuccess"] = "رمز عبور با موفقیت به ایمیل شما ارسال شد. لطفاً ایمیل خود را بررسی کنید.";
+                }
+                else
+                {
+                    TempData["EmailError"] = "کاربری با این ایمیل یافت نشد.";
+                }
+            }
+            catch
+            {
+                TempData["EmailError"] = "در ارسال ایمیل مشکلی رخ داد. لطفاً دوباره تلاش کنید.";
+            }
+
+            return RedirectToAction("Login");
+        }
+
 
         #endregion
         public IActionResult Logout()

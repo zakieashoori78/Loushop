@@ -5,10 +5,12 @@ using Loushop.services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Security.Claims;
 
 namespace Loushop
@@ -44,6 +46,19 @@ namespace Loushop
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IZibalService, ZibalService>();
             services.AddHttpClient<IZibalService, ZibalService>();
+            services.AddTransient<IEmailSender, EmailSender>();
+
+            // تنظیمات سشن و کش توزیع‌شده
+            services.AddDistributedMemoryCache(); // حافظه کش برای مدیریت سشن‌ها
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30); // مدت زمان انقضا سشن
+                options.Cookie.HttpOnly = true; // جلوگیری از دسترسی جاوااسکریپت به کوکی
+                options.Cookie.IsEssential = true; // تنظیم کوکی به عنوان کوکی ضروری
+            });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); // اضافه کردن IHttpContextAccessor برای دسترسی به سشن در کل برنامه
+
             #endregion
 
             #region Authentication
@@ -51,11 +66,10 @@ namespace Loushop
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = "/Account/Login";
-                    options.LogoutPath = "/Account/Logout";
-                    // options.ExpireTimeSpan = TimeSpan.FromDays(10);
+                    options.LoginPath = "/Account/Login"; // مسیر ورود
+                    options.LogoutPath = "/Account/Logout"; // مسیر خروج
                 });
-            services.AddAuthorization();
+            services.AddAuthorization(); // مجوزهای دسترسی
 
             #endregion
         }
@@ -70,19 +84,21 @@ namespace Loushop
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
+                app.UseHsts(); // افزودن HSTS
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseStaticFiles(); // استفاده از فایل‌های استاتیک
 
-            app.UseRouting();
+            app.UseRouting(); // استفاده از روتینگ برای درخواست‌ها
+            app.UseSession(); // اضافه کردن Middleware برای استفاده از سشن
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseAuthentication(); // فعال‌سازی احراز هویت
+            app.UseAuthorization(); // فعال‌سازی مجوزهای دسترسی
+
+            // Middleware برای مدیریت دسترسی به بخش Admin
             app.Use(async (context, next) =>
             {
-                // Do work that doesn't write to the Response.
                 if (context.Request.Path.StartsWithSegments("/Admin"))
                 {
                     if (!context.User.Identity.IsAuthenticated)
@@ -95,9 +111,9 @@ namespace Loushop
                     }
                 }
                 await next.Invoke();
-                // Do logging or other work that doesn't write to the Response.
             });
 
+            // تنظیمات مربوط به endpoint ها
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
@@ -106,6 +122,8 @@ namespace Loushop
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            // تنظیمات مخصوص بخش‌های مختلف سایت
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

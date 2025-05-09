@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    var cartItemCount = HttpContextAccessor.HttpContext.Session.GetInt32("CartCount") ?? 0;
+    var role = HttpContextAccessor.HttpContext.Session.GetInt32("Role") ?? 3;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,53 +14,76 @@
     <link href="~/lib/bootstrap4/css/bootstrap-rtl.css" rel="stylesheet" />
     <link href="~/css/font-face.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="~/css/all.min.css" />
-   
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/fontawesome-free-6.7.2-web/css/all.min.css">
+    <link rel="stylesheet" href="~/css/sweetalert2.min.css" />
+
 </head>
 <body class="rtl" style="font-family: Sahel, sans-serif;">
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">فروشگاه من</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="container col-12">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-store"></i> فروشگاه من
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">خانه</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="ContactUs">تماس با ما</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> خانه</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="ContactUs"><i class="fas fa-phone"></i> تماس با ما</a></li>
+                        @if (role == 0)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">
+                                    <i class="fas fa-user-shield"></i> پنل مدیریت
+                                </a>
+                            </li>
+                        }
+                        @if (role == 1)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Profile" asp-action="Index">
+                                    <i class="fas fa-user-shield"></i> پنل کاربری
+                                </a>
+                            </li>
+                        }
                         <partial name="_Groups"></partial>
                     </ul>
+
                     <div class="search-bar">
                         <partial name="_Search"></partial>
                     </div>
+
                     <ul class="navbar-nav ms-auto">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link">@User.Identity.Name خوش آمدید!</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-danger" asp-area="" asp-controller="Account" asp-action="Logout">خروج</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link"><i class="fas fa-user"></i> @User.Identity.Name خوش آمدید!</a></li>
+                            <li class="nav-item"><a class="nav-link text-danger" asp-area="" asp-controller="Account" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> خروج</a></li>
                         }
                         else
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-success" asp-area="" asp-controller="Account" asp-action="Register">ثبت نام</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-primary" asp-area="" asp-controller="Account" asp-action="Login">ورود</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link text-success" asp-area="" asp-controller="Account" asp-action="Register"><i class="fas fa-user-plus"></i> ثبت نام</a></li>
+                            <li class="nav-item"><a class="nav-link text-primary" asp-area="" asp-controller="Account" asp-action="Login"><i class="fas fa-sign-in-alt"></i> ورود</a></li>
                         }
                     </ul>
+                </div>
+
+                <!-- سبد خرید -->
+                <div class="cart-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="ShowCart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count">@cartItemCount</span>
+                    </a>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <div class="row">
             <div class="col-md-3">
@@ -64,12 +94,20 @@
             </div>
         </div>
     </div>
+
+    <!-- ✅ فوتر بازگردانی شده -->
     <footer class="text-center text-muted">
         <div class="container">
             &copy; 2025 - Loushop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/sweetalert.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

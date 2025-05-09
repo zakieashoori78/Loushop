@@ -1,4 +1,5 @@
 ﻿using Loushop.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Loushop.Data.Repositories
         bool IsExistUserByEmail(string email);
         void AddUser(Users user);
         Users GetUserForLogin(string email, string password);
+        Task<Users> GetUserByEmailAsync(string email);
     }
     public class UserRepository : IUserRepository
     {
@@ -36,6 +38,10 @@ namespace Loushop.Data.Repositories
         {
             return _context.Users
                 .SingleOrDefault(u => u.Email == email && u.Password == password);
+        }
+        public async Task<Users> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
         }
     }
 }

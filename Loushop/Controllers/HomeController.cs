@@ -14,6 +14,7 @@ using Loushop.Dtos.RequestDto;
 using System.Collections.Generic;
 using Loushop.ViewModels;
 using Loushop.ViewModels.Search;
+using Microsoft.AspNetCore.Http;
 
 namespace Loushop.Controllers
 {
@@ -31,7 +32,28 @@ namespace Loushop.Controllers
 
         public IActionResult Index()
         {
+            Order order = new Order();
+            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!string.IsNullOrEmpty(user))
+            {
+                int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                order = _context.Orders
+                            .Where(o => o.UserId == userId && !o.IsFinaly)
+                            .Include(o => o.OrderDetails)
+                            .ThenInclude(d => d.Product)
+                            .FirstOrDefault();
+                var users = _context.Users.FirstOrDefault(x => x.UserId == userId);
+                HttpContext.Session.SetInt32("Role", users.IsAdmin ? 0 : 1);
+            }
+            else
+            {
+                HttpContext.Session.SetInt32("Role", 3);
+
+            }
+
             var products = _context.Products.ToList();
+            HttpContext.Session.SetInt32("CartCount", order?.OrderDetails?.Count ?? 0);
+          
             return View(products);
         }
 
@@ -114,6 +136,14 @@ namespace Loushop.Controllers
                     });
                 }
 
+                var orders = _context.Orders
+                                  .Where(o => o.UserId == userId && !o.IsFinaly)
+                                  .Include(o => o.OrderDetails)
+                                  .ThenInclude(d => d.Product)
+                                  .FirstOrDefault();
+                HttpContext.Session.SetInt32("CartCount", orders?.OrderDetails?.Count ?? 0);
+                var user = _context.Users.FirstOrDefault(x => x.UserId == userId);
+                HttpContext.Session.SetInt32("Role", user.IsAdmin ? 0 : 1);
                 _context.SaveChanges();
             }
 
@@ -139,10 +169,22 @@ namespace Loushop.Controllers
 
             if (orderDetail != null)
             {
+
                 _context.OrderDetails.Remove(orderDetail);
                 _context.SaveChanges();
+
             }
 
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var order = _context.Orders
+                                      .Where(o => o.UserId == userId && !o.IsFinaly)
+                                      .Include(o => o.OrderDetails)
+                                      .ThenInclude(d => d.Product)
+                                      .FirstOrDefault();
+
+            HttpContext.Session.SetInt32("CartCount", order?.OrderDetails?.Count ?? 0);
+            var user = _context.Users.FirstOrDefault(x => x.UserId == userId);
+            HttpContext.Session.SetInt32("Role", user.IsAdmin ? 0 : 1);
             return RedirectToAction("ShowCart");
         }
 

@@ -2,53 +2,81 @@
 @model Loushop.Pages.Admin.ManageUser.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "مدیریت کاربران";
 }
 
-<h1>Index</h1>
+<h1 class="text-center my-4">مدیریت کاربران</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
+<p class="text-center">
+    <a asp-page="Create" class="btn btn-success">
+        <i class="fas fa-plus"></i> ایجاد کاربر جدید
+    </a>
 </p>
-<table class="table">
-    <thead>
+
+<!-- Search Box -->
+<div class="text-center mb-3">
+    <input type="text" id="searchInput" class="form-control w-50" placeholder="جستجو بر اساس ایمیل یا نام کاربر..." onkeyup="searchTable()" />
+</div>
+
+<table class="table table-bordered table-striped table-hover text-center" id="usersTable">
+    <thead class="thead-dark">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Users[0].Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Users[0].Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Users[0].RegisterDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Users[0].IsAdmin)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.Users[0].Email)</th>
+            <th>@Html.DisplayNameFor(model => model.Users[0].Password)</th>
+            <th>@Html.DisplayNameFor(model => model.Users[0].RegisterDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Users[0].IsAdmin)</th>
+            <th class="text-center">عملیات</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Users) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegisterDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsAdmin)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.UserId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.UserId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.UserId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Users)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.Password)</td>
+                <td>@Html.DisplayFor(modelItem => item.RegisterDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.IsAdmin)</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a asp-page="./Edit" asp-route-id="@item.UserId" class="btn btn-warning btn-sm" title="ویرایش">
+                            <i class="fas fa-edit"></i> ویرایش
+                        </a>
+                        <a asp-page="./Details" asp-route-id="@item.UserId" class="btn btn-info btn-sm" title="جزئیات">
+                            <i class="fas fa-info-circle"></i> جزئیات
+                        </a>
+                        <a asp-page="./Delete" asp-route-id="@item.UserId" class="btn btn-danger btn-sm" title="حذف">
+                            <i class="fas fa-trash"></i> حذف
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<script>
+    // Function to filter table based on search input
+    function searchTable() {
+        var input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("usersTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 1; i < tr.length; i++) {  // start from 1 to skip header row
+            tr[i].style.display = "none";  // initially hide all rows
+            td = tr[i].getElementsByTagName("td");
+
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        break; // If match is found, display the row
+                    }
+                }
+            }
+        }
+    }
+</script>

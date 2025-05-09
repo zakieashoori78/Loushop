@@ -1,40 +1,64 @@
 ﻿@page
 @model Loushop.Pages.Admin.IndexModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "لیست کالاها";
 }
 
-<h1>لیست کالاها</h1>
-<hr />
-<p>
-    <a asp-page="Add" class="myButton">افزودن کالا</a>
-</p>
-<table>
-    <thead>
-        <tr>
-            <th>تصویر</th>
-            <th>نام</th>
-            <th>قیمت</th>
-            <th>دستورات</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Products)
-        {
-            <tr>
-                <td>
-                    <img src="@(item.ImagePath)" style="max-width: 200px; border: 1px solid gray;padding: 3px" />
-                </td>
-                <td>
-                    @item.Name
-                </td>
-                <td>@item.Item.Price</td>
-                <td>
-                    <a asp-page="Edit" asp-route-id="@item.Id">ویرایش </a>
-                    <a asp-page="Delete" asp-route-id="@item.Id">حذف</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<h1 class="text-center my-4">لیست کالاها</h1>
 
+<div class="text-end mb-3">
+    <a asp-page="Add" class="btn btn-success">➕ افزودن کالا</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover text-center align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>تصویر</th>
+                <th>نام</th>
+                <th>قیمت</th>
+                <th>موجودی</th>
+                <th>دستورات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Products)
+            {
+                var modalId = $"imageModal_{item.Id}";
+                var labelId = $"imageModalLabel_{item.Id}";
+
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#@modalId">
+                            نمایش تصویر
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="@modalId" tabindex="-1" role="dialog" aria-labelledby="@labelId" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="@labelId">تصویر کالا: @item.Name</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="بستن">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <img src="@item.ImagePath" class="img-fluid rounded border" style="max-height: 400px;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>@item.Name</td>
+                    <td>@item.Item.Price.ToString("N0") تومان</td>
+                    <td>@item.Item.QuantityInStocke</td>
+                    <td>
+                        <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">✏️ ویرایش</a>
+                        <a asp-page="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">🗑 حذف</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
