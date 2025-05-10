@@ -1,34 +1,50 @@
 ﻿@using Loushop.ViewModels
 @model DetailsViewModel
 @{
-    ViewData["Title"] = "کالا" + Model.Product.Name;
+    ViewData["Title"] = "کالا " + Model.Product.Name;
 }
 
-<div>
-    <h1 class="display-5">@Model.Product.Name</h1>
+<div class="container">
+    <h1 class="display-5 text-center">@Model.Product.Name</h1>
     <hr />
-    <img src="@($"/images/{Model.Product.Id}.jpg")"
-         alt="@Model.Product.Name"
-         class="img-thumbnail"
-         />
-    <p class="py-5  text-justify" > @Model.Product.Description</p>
-    <p > قیمت: @Model.Product.Item.Price</p>
-    <dl>
-        @foreach (var item in Model.Categories)
-        {
-            <dt>@item.Name</dt>
-            <dd>@item.Description</dd>
-        }
+    <div class="row">
+        <!-- نمایش تصویر محصول -->
+        <div class="col-md-6">
+            <img src="@($"/images/{Model.Product.Id}.jpg")"
+                 alt="@Model.Product.Name"
+                 class="img-fluid rounded shadow-sm" />
+        </div>
 
-    </dl>
-    <div>
-        <a class="btn btn-primary"
-           asp-controller="Home"
-           asp-action="AddToCart"
-           asp-route-itemId="@Model.Product.ItemId">افزودن به سبد خرید</a>
+        <!-- نمایش جزئیات محصول -->
+        <div class="col-md-6">
+            <p class="lead">@Model.Product.Description</p>
 
+            <!-- نمایش قیمت محصول -->
+            <p class="fs-4 text-success">
+                <strong>قیمت: </strong>@Model.Product.Item.Price.ToString("N0") تومان
+            </p>
+
+            <!-- نمایش موجودی محصول -->
+            <p class="fs-5 text-muted">
+                <strong>موجودی: </strong>@Model.Product.Item.QuantityInStocke
+            </p>
+
+            <!-- نمایش دسته‌بندی‌ها -->
+            <dl>
+                @foreach (var item in Model.Categories)
+                {
+                    <dt>@item.Name</dt>
+                    <dd>@item.Description</dd>
+                }
+            </dl>
+
+            <!-- دکمه افزودن به سبد خرید -->
+            <a class="btn btn-primary mt-4"
+               asp-controller="Home"
+               asp-action="AddToCart"
+               asp-route-itemId="@Model.Product.ItemId">
+                افزودن به سبد خرید
+            </a>
+        </div>
     </div>
-
-
 </div>
-

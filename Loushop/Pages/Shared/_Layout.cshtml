@@ -17,27 +17,32 @@
     <link rel="stylesheet" href="~/fontawesome-free-6.7.2-web/css/all.min.css">
 </head>
 <body dir="rtl">
-    <header class="navbar navbar-dark bg-primary">
-        <a href="/" class="navbar-brand">پنل ادمین</a>
+    <header class="navbar navbar-expand-lg navbar-dark" style="background-color: #4CAF50;">
+@*         <a class="navbar-brand" href="/">مدیریت سایت</a> <!-- تغییر عنوان -->
+ *@        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/"><i class="fas fa-home"></i> خانه</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Admin/ManageUser/Index"><i class="fas fa-users-cog"></i> مدیریت کاربران</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Admin/Product/Index"><i class="fas fa-box"></i> مدیریت محصولات</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Admin/Category/Index"><i class="fas fa-th"></i> مدیریت گروه بندی</a>
+                </li>
+            </ul>
+        </div>
     </header>
+
     <div class="container-fluid">
         <div class="row">
-            <aside class="col-md-2 bg-light p-3">
-                <nav>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/">خانه</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-page="ManageUser/Index">مدیریت کاربران</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-page="Category/Index">مدیریت گروه بندی ها</a>
-                        </li>
-                    </ul>
-                </nav>
-            </aside>
-            <main class="col-md-10">
+            <main class="col-md-12">
                 @RenderBody()
             </main>
         </div>
@@ -47,15 +52,13 @@
         <p>© 2025 Admin Panel. All Rights Reserved.</p>
     </footer>
 
-    <!-- Local jQuery -->
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <!-- Local Bootstrap JS (includes Popper.js) -->
-    <script src="~/lib/bootstrap4/js/bootstrap.bundle.min.js"></script>
-    <!-- Local SweetAlert JS -->
+
+    <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/sweetalert.js"></script>
-    <!-- Local jQuery Validation -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    @RenderSection("Scripts", false)
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

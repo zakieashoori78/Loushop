@@ -1,0 +1,124 @@
+﻿@model Loushop.ViewModels.AdminDashboardViewModel
+@{
+    Layout = "../../Pages/Shared/_Layout.cshtml";
+}
+<div class="container my-5">
+    <div class="row">
+        <!-- کارت گزارش که تمام صفحه را اشغال می‌کند -->
+        <div class="col-md-12 mb-3">
+            <div class="card shadow-lg border-light">
+                <div class="card-header text-white bg-info text-center">
+                    <h4>در یک نگاه</h4>
+                </div>
+                <div class="card-body">
+                    <!-- نمایش تمامی داده‌ها در یک کارت -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 text-center">
+                            <p><strong>تعداد کالاها:</strong> @Model.TotalProducts</p>
+                            <p><strong>بیشترین موجودی:</strong> @Model.ProductWithHighestStock</p>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <p><strong>کمترین موجودی:</strong> @Model.ProductWithLowestStock</p>
+                            <p><strong>محصول با بیشترین فروش:</strong> @Model.BestSellingProduct</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6 text-center">
+                            <p><strong>تعداد کاربران:</strong> @Model.TotalUsers</p>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <p><strong>تعداد ادمین‌ها:</strong> @Model.TotalAdmins</p>
+                        </div>
+                    </div>
+
+                    <!-- دکمه‌ها -->
+                    <div class="d-flex justify-content-between">
+                        <div class="w-50 text-center">
+                            <button type="button" class="btn btn-primary btn-md col-10" data-bs-toggle="modal" data-bs-target="#productModal">گزارش کامل محصولات</button>
+                        </div>
+                        <div class="w-50 text-center">
+                            <button type="button" class="btn btn-success btn-md col-10" data-bs-toggle="modal" data-bs-target="#userModal">گزارش کامل کاربران</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مدال برای گزارش محصولات -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">گزارش کامل محصولات</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>نام محصول</th>
+                            <th>قیمت</th>
+                            <th>موجودی</th>
+                            <th>تعداد سفارشات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ProductReports)
+                        {
+                            <tr>
+                                <td>@item.ProductName</td>
+                                <td>@item.Price</td>
+                                <td>@item.Stock</td>
+                                <td>@item.OrderCount</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مدال برای گزارش کاربران -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">گزارش کامل کاربران</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ایمیل</th>
+                            <th>تاریخ ثبت‌نام</th>
+                            <th>آیا ادمین است؟</th>
+                            <th>تعداد سفارشات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.UserReports)
+                        {
+                            <tr>
+                                <td>@item.Email</td>
+                                <td>@item.RegisterDate.ToString("yyyy-MM-dd")</td>
+                                <td>@(item.IsAdmin ? "بله" : "خیر")</td>
+                                <td>@item.OrderCount</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
