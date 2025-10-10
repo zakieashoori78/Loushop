@@ -38,11 +38,11 @@ namespace Loushop.Pages.Admin
                 Product.Categories = _context.categories.ToList();
                 ModelState.AddModelError("Product.Categories", "لطفاً حداقل یک دسته‌بندی انتخاب کنید.");
             }
-            if (!ModelState.IsValid)
-            {
-                Product.Categories = _context.categories.ToList();
-                return Page();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    Product.Categories = _context.categories.ToList();
+            //    return Page();
+            //}
 
             var item = new Item()
             {

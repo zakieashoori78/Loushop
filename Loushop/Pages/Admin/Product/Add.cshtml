@@ -42,7 +42,7 @@
                     <span asp-validation-for="Product.QuantityInStock" class="text-danger"></span>
                 </div>
 
-                <!-- تصویر محصول -->+
+                <!-- تصویر محصول -->
                 <div class="form-group">
                     <label asp-for="Product.Picture" class="font-weight-bold">تصویر محصول:</label>
                     <input asp-for="Product.Picture" class="form-control-file" />
@@ -53,8 +53,9 @@
                 <div class="form-group">
                     <label for="categoriesDropdown" class="font-weight-bold">انتخاب دسته‌بندی‌ها:</label>
                     @if (Model?.Product?.Categories != null && Model.Product.Categories.Any())
-                    {                       
-                        <select id="categoriesDropdown" name="Product.Categories[0].Id" class="form-control border-primary">
+                    {
+                        <select id="categoriesDropdown" name="Product.Categories[0].Id" class="form-control border-primary" onchange="setCategoryName()">
+                            <option value="" disabled selected>لطفاً یک دسته‌بندی انتخاب کنید</option> <!-- گزینه پیش‌فرض -->
                             @foreach (var item in Model.Product.Categories)
                             {
                                 <option value="@item.Id">@item.Name</option>
@@ -67,6 +68,11 @@
                     }
                     <span asp-validation-for="Product.Categories" class="text-danger"></span>
                 </div>
+
+
+                <!-- فیلد مخفی برای ارسال نام دسته‌بندی -->
+                <input type="hidden" id="categoryName" name="Product.Categories[0].Name" />
+
             </div>
         </div>
 
@@ -76,3 +82,13 @@
         </div>
     </form>
 </div>
+
+<script>
+    // این تابع برای پر کردن فیلد مخفی با نام دسته‌بندی استفاده می‌شود
+    function setCategoryName() {
+        var select = document.getElementById("categoriesDropdown");
+        var selectedOption = select.options[select.selectedIndex];
+        var categoryName = selectedOption.text; // نام دسته‌بندی انتخاب شده
+        document.getElementById("categoryName").value = categoryName; // مقدار فیلد مخفی را تنظیم می‌کنیم
+    }
+</script>
