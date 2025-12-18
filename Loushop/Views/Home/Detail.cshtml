@@ -39,12 +39,19 @@
             </dl>
 
             <!-- دکمه افزودن به سبد خرید -->
-            <a class="btn btn-primary mt-4"
-               asp-controller="Home"
-               asp-action="AddToCart"
-               asp-route-itemId="@Model.Product.ItemId">
-                افزودن به سبد خرید
-            </a>
+            @if (Model.Product.Item.QuantityInStocke > 0)
+            {
+                <a class="btn btn-primary mt-4"
+                   asp-controller="Home"
+                   asp-action="AddToCart"
+                   asp-route-itemId="@Model.Product.ItemId">
+                    افزودن به سبد خرید
+                </a>
+            }
+            else
+            {
+                <p class="text-danger mt-4">این محصول موجود نیست.</p>
+            }
         </div>
     </div>
 </div>

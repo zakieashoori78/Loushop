@@ -5,16 +5,12 @@
     ViewData["Title"] = "مدیریت کاربران";
 }
 
-<h1 class="text-center my-4">مدیریت کاربران</h1>
 
-<p class="text-center">
+<!-- Create New Button and Search Button -->
+<div class="d-flex justify-content-between mb-3">
     <a asp-page="Create" class="btn btn-success">
         <i class="fas fa-plus"></i> ایجاد کاربر جدید
     </a>
-</p>
-
-<!-- Search Box -->
-<div class="text-center mb-3">
     <input type="text" id="searchInput" class="form-control w-50" placeholder="جستجو بر اساس ایمیل یا نام کاربر..." onkeyup="searchTable()" />
 </div>
 
@@ -31,6 +27,9 @@
     <tbody>
         @foreach (var item in Model.Users)
         {
+            var modalId = $"modal_{item.UserId}";
+            var labelId = $"modalLabel_{item.UserId}";
+
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Email)</td>
                 <td>@Html.DisplayFor(modelItem => item.Password)</td>
@@ -41,15 +40,33 @@
                         <a asp-page="./Edit" asp-route-id="@item.UserId" class="btn btn-warning btn-sm" title="ویرایش">
                             <i class="fas fa-edit"></i> ویرایش
                         </a>
-                        <a asp-page="./Details" asp-route-id="@item.UserId" class="btn btn-info btn-sm" title="جزئیات">
+                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#@modalId" title="جزئیات">
                             <i class="fas fa-info-circle"></i> جزئیات
-                        </a>
-                        <a asp-page="./Delete" asp-route-id="@item.UserId" class="btn btn-danger btn-sm" title="حذف">
-                            <i class="fas fa-trash"></i> حذف
-                        </a>
+                        </button>
                     </div>
                 </td>
             </tr>
+
+            <!-- Modal for User Details -->
+            <div class="modal fade" id="@modalId" tabindex="-1" aria-labelledby="@labelId" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="@labelId">جزئیات کاربر: @item.Email</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>ایمیل:</strong> @item.Email</p>
+                            <p><strong>رمز عبور:</strong> @item.Password</p>
+                            <p><strong>تاریخ ثبت‌نام:</strong> @item.RegisterDate.ToString("yyyy-MM-dd")</p>
+                            <p><strong>آیا ادمین است؟</strong> @(item.IsAdmin ? "بله" : "خیر")</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
     </tbody>
 </table>

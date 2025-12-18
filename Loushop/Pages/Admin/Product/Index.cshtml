@@ -29,19 +29,17 @@
 
                 <tr>
                     <td>
-                        <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#@modalId">
+                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#@modalId">
                             نمایش تصویر
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="@modalId" tabindex="-1" role="dialog" aria-labelledby="@labelId" aria-hidden="true">
+                        <div class="modal fade" id="@modalId" tabindex="-1" aria-labelledby="@labelId" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="@labelId">تصویر کالا: @item.Name</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="بستن">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                                     </div>
                                     <div class="modal-body text-center">
                                         <img src="@item.ImagePath" class="img-fluid rounded border" style="max-height: 400px;" />
@@ -55,7 +53,7 @@
                     <td>@item.Item.QuantityInStocke</td>
                     <td>
                         <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">✏️ ویرایش</a>
-                        <a asp-page="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">🗑 حذف</a>
+                        @*   <a asp-page="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">🗑 حذف</a> *@
                     </td>
                 </tr>
             }

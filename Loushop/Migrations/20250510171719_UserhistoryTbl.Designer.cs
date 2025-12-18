@@ -4,6 +4,7 @@ using Loushop.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Loushop.Migrations
 {
     [DbContext(typeof(LouShopContext))]
-    partial class LouShopContextModelSnapshot : ModelSnapshot
+    [Migration("20250510171719_UserhistoryTbl")]
+    partial class UserhistoryTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -289,25 +292,6 @@ namespace Loushop.Migrations
                             ItemId = 3,
                             Name = "دمپایی ابری"
                         });
-                });
-
-            modelBuilder.Entity("Loushop.Models.UserHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("UserHistories");
                 });
 
             modelBuilder.Entity("Loushop.Models.Users", b =>

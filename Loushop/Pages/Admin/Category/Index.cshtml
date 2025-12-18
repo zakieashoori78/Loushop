@@ -39,28 +39,26 @@
                         <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm" title="ویرایش">
                             <i class="fas fa-edit"></i> ویرایش
                         </a>
-                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#@modalId" title="جزئیات">
+                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#@modalId" title="جزئیات">
                             <i class="fas fa-info-circle"></i> جزئیات
                         </button>
                     </td>
                 </tr>
 
                 <!-- Modal for Details -->
-                <div class="modal fade" id="@modalId" tabindex="-1" role="dialog" aria-labelledby="@labelId" aria-hidden="true">
+                <div class="modal fade" id="@modalId" tabindex="-1" aria-labelledby="@labelId" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="@labelId">جزئیات گروه: @item.Name</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="بستن">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                             </div>
                             <div class="modal-body">
                                 <p><strong>نام گروه:</strong> @item.Name</p>
                                 <p><strong>توضیحات:</strong> @item.Description</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
                             </div>
                         </div>
                     </div>
