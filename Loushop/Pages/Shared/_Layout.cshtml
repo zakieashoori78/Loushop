@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Admin Panel</title>
+
+    <!-- Local Bootstrap RTL CSS -->
+    <link href="~/lib/bootstrap4/css/bootstrap-rtl.css" rel="stylesheet" />
+    <!-- Local Sahel Font -->
+    <link href="https://cdn.rawgit.com/rastikerdar/sahel-font/v1.0.0-alpha23/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <!-- Local Bootstrap CSS -->
+    <link href="~/lib/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Local Admin CSS -->
+    <link href="~/css/admin.css" rel="stylesheet" />
+    <!-- Local Font Awesome -->
+    <link rel="stylesheet" href="~/fontawesome-free-6.7.2-web/css/all.min.css">
+</head>
+<body dir="rtl">
+    <header class="navbar navbar-expand-lg navbar-dark" style="background-color: #4CAF50;">
+@*         <a class="navbar-brand" href="/">مدیریت سایت</a> <!-- تغییر عنوان -->
+ *@        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/"><i class="fas fa-home"></i> خانه</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Admin/ManageUser/Index"><i class="fas fa-users-cog"></i> مدیریت کاربران</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Admin/Product/Index"><i class="fas fa-box"></i> مدیریت محصولات</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Admin/Category/Index"><i class="fas fa-th"></i> مدیریت گروه بندی</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <main class="col-md-12">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center p-2 mt-4">
+        <p>© 2025 Admin Panel. All Rights Reserved.</p>
+    </footer>
+
+
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/sweetalert.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,67 @@
+﻿@page
+@model Loushop.Pages.Admin.DeleteModel
+@{
+    ViewData["Title"] = "حذف کالا";
+}
+
+<div class="container-fluid mt-5">
+    <h1 class="text-center text-danger mb-4">حذف کالا</h1>
+    <hr />
+    <form id="deleteForm" method="post" enctype="multipart/form-data" class="p-4 bg-light rounded shadow-sm">
+        <div class="row">
+            <!-- ستون اول -->
+            <div class="col-md-6">
+                <!-- نام محصول -->
+                <div class="form-group">
+                    <label asp-for="Product.Name" class="font-weight-bold">نام محصول:</label>
+                    <input asp-for="Product.Name" class="form-control border-danger" readonly />
+                    <span asp-validation-for="Product.Name" class="text-danger"></span>
+                </div>
+
+                <!-- توضیحات محصول -->
+                <div class="form-group">
+                    <label asp-for="Product.Description" class="font-weight-bold">توضیحات محصول:</label>
+                    <textarea asp-for="Product.Description" class="form-control border-danger" readonly></textarea>
+                    <span asp-validation-for="Product.Description" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- ستون دوم -->
+            <div class="col-md-6">
+                <!-- تصویر محصول -->
+                <div class="form-group text-center">
+                    <label class="font-weight-bold">تصویر محصول:</label>
+                    <img src="/images/@(Model.Product.Id).jpg" class="img-fluid border border-danger" style="max-width: 200px" />
+                </div>
+            </div>
+        </div>
+        <input type="hidden" asp-for="Product.Id" />
+
+        <!-- دکمه حذف -->
+        <div class="text-center mt-4">
+            <button type="button" id="deleteButton" class="btn btn-danger btn-lg">حذف کالا</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById("deleteButton").addEventListener("click", function (e) {
+            Swal.fire({
+                title: 'آیا مطمئن هستید؟',
+                text: "این عملیات غیرقابل بازگشت است!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'بله، حذف شود!',
+                cancelButtonText: 'لغو'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // ارسال فرم
+                    document.getElementById("deleteForm").submit();
+                }
+            });
+        });
+    </script>
+}

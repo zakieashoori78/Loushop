@@ -1,0 +1,14 @@
+﻿@using Loushop.Data.Repositories
+@inject IGroupRepository _GroupRepository;
+
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">گروه‌ها</a>
+    <ul class="dropdown-menu" aria-labelledby="dropdown03">
+        @foreach (var item in _GroupRepository.GetAllCategories())
+        {
+            <li>
+                <a class="dropdown-item" asp-controller="Product" asp-action="ShowProductByGroupId" asp-route-id="@item.Id" asp-route-name="@item.Name">@item.Name</a>
+            </li>
+        }
+    </ul>
+</li>

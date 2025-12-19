@@ -1,0 +1,39 @@
+﻿@page
+@model Loushop.Pages.Admin.Category.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center my-4">ایجاد گروه جدید</h1>
+
+<h4 class="text-center">گروه بندی</h4>
+<hr />
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="form-group">
+                <label asp-for="Category.Name" class="control-label">نام گروه</label>
+                <input asp-for="Category.Name" class="form-control" placeholder="نام گروه را وارد کنید" />
+                <span asp-validation-for="Category.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Category.Description" class="control-label">توضیحات</label>
+                <input asp-for="Category.Description" class="form-control" placeholder="توضیحات گروه را وارد کنید" />
+                <span asp-validation-for="Category.Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group text-center">
+                <input type="submit" value="ایجاد گروه" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="text-center mt-3">
+    <a asp-page="Index" class="btn btn-outline-secondary">بازگشت به لیست</a>
+</div>

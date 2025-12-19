@@ -1,20 +1,17 @@
 ﻿@model Product
-<div class="col-4">
-    <div class="card">
-        <img src="/images/@(Model.Id).jpg" height="200" width="200" class="card-img-top" img-thumbnail= />
-        <div class="card-body">
-            <h5 class="card-title">@Model.Name</h5>
-            <a asp-action="Detail"
-               asp-controller="Home"
-               asp-route-id="@Model.Id">جزِییات محصول</a>
 
+<div class="col">
+    <div class="card shadow-lg h-100 border-0">
+        <img src="@(Model.ImagePath)" class="card-img-top img-fluid rounded" alt="@Model.Name">
+        <div class="card-body d-flex flex-column">
+            <h5 class="card-title text-center text-primary font-weight-bold">@Model.Name</h5>
+            
+            <div class="mt-auto">
+                <a asp-action="Detail"
+                   asp-controller="Home"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-outline-primary btn-block mt-3">جزئیات محصول</a>
+            </div>
         </div>
-
-
     </div>
-
-
-
 </div>
-
-        

@@ -8,17 +8,17 @@ namespace Loushop.Migrations
         {
             migrationBuilder.InsertData(
                 table: "Items",
-                columns: new[] { "Id", "Price", "QuantityInStoke" },
+                columns: new[] { "Id", "Price", "QuantityInStocke" },
                 values: new object[] { 1, 850.0m, 5 });
 
             migrationBuilder.InsertData(
                 table: "Items",
-                columns: new[] { "Id", "Price", "QuantityInStoke" },
+                columns: new[] { "Id", "Price", "QuantityInStocke" },
                 values: new object[] { 2, 321.0m, 7 });
 
             migrationBuilder.InsertData(
                 table: "Items",
-                columns: new[] { "Id", "Price", "QuantityInStoke" },
+                columns: new[] { "Id", "Price", "QuantityInStocke" },
                 values: new object[] { 3, 2500m, 2 });
 
             migrationBuilder.InsertData(

@@ -1,0 +1,127 @@
+﻿@using Loushop.Helper
+@model Loushop.ViewModels.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <!-- کارت گزارش کاربری که تمام صفحه را اشغال می‌کند -->
+        <div class="col-md-12 mb-3">
+            <div class="card shadow-lg border-light">
+                <div class="card-header text-white bg-info text-center">
+                    <!-- متن وسط چین شد -->
+                    <h4>گزارش کاربری</h4>
+                </div>
+                <div class="card-body">
+                    <!-- اطلاعات کاربر -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 text-center">
+                            <!-- مرکزچین کردن محتوا -->
+                            <p><strong>ایمیل:</strong> @Model.Email</p>
+                            <p><strong>تاریخ ثبت نام:</strong> @DateHelper.ToPersianDate(Model.RegisterDate)</p>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <!-- مرکزچین کردن محتوا -->
+                            <p><strong>تعداد سفارشات:</strong> @Model.TotalOrders</p>
+                            <p><strong>مجموع خرید:</strong> @Model.TotalSpent تومان</p>
+                        </div>
+                    </div>
+
+                    <!-- دکمه‌ها -->
+                    <div class="d-flex justify-content-between">
+                        <div class="w-50 text-center">
+                            <button type="button" class="btn btn-primary btn-md col-10" data-bs-toggle="modal" data-bs-target="#changePasswordModal">تغییر رمز عبور</button>
+                        </div>
+                        <div class="w-50 text-center">
+                            <button type="button" class="btn btn-success btn-md col-10" data-bs-toggle="modal" data-bs-target="#allOrdersModal">مشاهده تمامی خریدها</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مدال برای تغییر رمز عبور -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">تغییر رمز عبور</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="ChangePassword" method="post">
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">رمز عبور فعلی</label>
+                        <input type="password" class="form-control" id="currentPassword" name="CurrentPassword" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">رمز عبور جدید</label>
+                        <input type="password" class="form-control" id="newPassword" name="NewPassword" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">تایید رمز عبور جدید</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="ConfirmPassword" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">تغییر رمز عبور</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مدال برای نمایش تمامی خریدها -->
+<div class="modal fade" id="allOrdersModal" tabindex="-1" aria-labelledby="allOrdersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="allOrdersModalLabel">تمامی خریدهای شما</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">تاریخ</th>
+                            <th scope="col">نام محصول</th>
+                            <th scope="col">قیمت واحد</th>
+                            <th scope="col">تعداد</th>
+                            <th scope="col">مجموع</th>
+                            <th scope="col">وضعیت</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.Orders)
+                        {
+                            @foreach (var detail in order.OrderDetails)
+                            {
+                                <tr>
+                                    <!-- تبدیل تاریخ میلادی به شمسی -->
+                                    <td>@DateHelper.ToPersianDate(order.CreateDate)</td>  <!-- تاریخ شمسی -->
+                                    <td>@detail.ProductName</td>
+                                    <td>@detail.Price تومان</td>
+                                    <td>@detail.Count</td>
+                                    <td>@(detail.Price * detail.Count) تومان</td>
+                                    <td>
+                                        <span class="badge @(order.IsFinaly ? "bg-success" : "bg-warning")">
+                                            @(order.IsFinaly ? "تکمیل شده" : "در حال پردازش")
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>

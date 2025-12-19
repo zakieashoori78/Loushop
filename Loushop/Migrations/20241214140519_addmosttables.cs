@@ -13,7 +13,7 @@ namespace Loushop.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    QuantityInStoke = table.Column<int>(type: "int", nullable: false)
+                    QuantityInStocke = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

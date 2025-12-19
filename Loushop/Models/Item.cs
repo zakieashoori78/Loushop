@@ -9,9 +9,7 @@ namespace Loushop.Models
     {
         public int Id { get; set; }
         public Decimal Price { get; set; }
-        public int QuantityInStoke { get; set;}
-
-
+        public int QuantityInStocke { get; set;}
         public Product Product { get; set; }
     }
 

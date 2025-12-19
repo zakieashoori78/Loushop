@@ -1,0 +1,12 @@
+﻿@font-face {
+    font-family: 'Sahel';
+    src: url('/css/font-face/Sahel.woff') format('woff'), url('/css/Sahel.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('/css/font-face/fa-solid-900.woff2') format('woff2'), url('/css/fa-solid-900.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Sahel';
+    src: url('/webfonts/Sahel.woff') format('woff'), url('/webfonts/Sahel.ttf') format('truetype');
+}
